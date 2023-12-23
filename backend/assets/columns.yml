@@ -1,0 +1,13 @@
+input_xlsx:
+  - nombre
+  - cantidad
+  - costo
+  - precio
+  - fecha
+output_db:
+  - name
+  - quantity
+  - cost
+  - price
+  - purchase_date
+  - added_date
