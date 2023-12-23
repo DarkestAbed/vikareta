@@ -1,0 +1,12 @@
+# folders
+venv/
+__pycache__/
+.vscode/
+.pytest_cache/
+# files
+.gitconfig
+inputs/*.xlsx
+output/*.log
+assets/*.db
+*.pyc
+.env
