@@ -1,6 +1,6 @@
 import pytest
 
-from app.process_ingested_data import define_quantities_on_ingested_inventory
+from backend.app.remote.process_ingested_data import define_quantities_on_ingested_inventory
 
 
 @pytest.mark.skip(reason="not developed yet")

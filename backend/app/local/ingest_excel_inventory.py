@@ -1,10 +1,12 @@
 import pandas as pd
 
-from assets.config import YAML_COLUMNS_FILENAME
-from services.logger import logger
-from utils.column_lists import read_colums_yaml
+from backend.assets.config import YAML_COLUMNS_FILENAME, PROJ_PATH
+from backend.services.logger import Logger
+from backend.utils.column_lists import read_colums_yaml
 
 from typing import Union
+
+logger: Logger = Logger()
 
 
 def read_excel_input_file(file_to_ingest: str) -> pd.DataFrame:
@@ -19,14 +21,14 @@ def read_excel_input_file(file_to_ingest: str) -> pd.DataFrame:
     # imports
     import os
     # setup
-    input_loc = os.path.join(os.getcwd(), "inputs", file_to_ingest)
+    input_loc = os.path.join(PROJ_PATH, "inputs", file_to_ingest)
     # exec
     # reading file
     with open(file=input_loc, mode="rb") as file:
         pdf = pd.read_excel(io=file, sheet_name=0)
     # wrap up
     if not pdf.empty:
-        logger.debug(f"Ingested inventory DataFrame:\n{pdf}")
+        logger.logger.debug(f"Ingested inventory DataFrame:\n{pdf}")
         return pdf
     else:
         return False
@@ -54,19 +56,19 @@ def check_columns_on_file(ingested_pdf: pd.DataFrame, column_list: list) -> bool
     ## check if number of columns is equal on ingestion and requisite
     cols_on_ingested_pdf = ingested_pdf.shape[1]
     cols_on_requested_list = len(requested_cols)
-    logger.debug(cols_on_ingested_pdf)
-    logger.debug(cols_on_requested_list)
+    logger.logger.debug(cols_on_ingested_pdf)
+    logger.logger.debug(cols_on_requested_list)
     check_len_columns = cols_on_requested_list == cols_on_ingested_pdf
     if not check_len_columns:
         return False
     ## check if all requested columns are in ingested pdf
-    logger.debug(ingested_pdf.columns)
-    logger.debug(requested_cols)
+    logger.logger.debug(ingested_pdf.columns)
+    logger.logger.debug(requested_cols)
     for column in requested_cols:
         if column not in ingested_pdf.columns:
             return False
     # wrap up
-    logger.info("Ingested inventory file looks good. Proceeding...")
+    logger.logger.info("Ingested inventory file looks good. Proceeding...")
     return True
 
 
@@ -90,18 +92,18 @@ def ingestion_orchestration(file_to_ingest: str = None) -> Union[bool, pd.DataFr
     ## NOTE: hardcoded input file for testing purposes
     if file_to_ingest is None:
         TEST_FILE = "inventario-test.xlsx"
-        logger.debug(f"Reading test file, '{TEST_FILE}'. Bear in mind, this is strictly for testing purposes")
+        logger.logger.debug(f"Reading test file, '{TEST_FILE}'. Bear in mind, this is strictly for testing purposes")
         file_to_ingest = TEST_FILE
     # exec
-    logger.info("Ingesting inventory Excel file...")
+    logger.logger.info("Ingesting inventory Excel file...")
     ingested_pdf = read_excel_input_file(file_to_ingest=file_to_ingest)
     if ingested_pdf is False:
-        logger.error("An error ocurred while ingesting the inventory file.\nPlease review and try again.")
+        logger.logger.error("An error ocurred while ingesting the inventory file.\nPlease review and try again.")
         return False
-    logger.info("Checking if the file is correctly formatted...")
+    logger.logger.info("Checking if the file is correctly formatted...")
     check_cols = check_columns_on_file(ingested_pdf=ingested_pdf, column_list=read_colums_yaml(file_name=YAML_COLUMNS_FILENAME))
     if not check_cols:
-        logger.error("An error occurred while reading the inventory file.\nPlease review and try again.")
+        logger.logger.error("An error occurred while reading the inventory file.\nPlease review and try again.")
         return False
     # wrap up
     return ingested_pdf

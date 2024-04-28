@@ -1,5 +1,5 @@
-from app.ingest_excel_inventory import ingestion_orchestration
-from services.logger import logger
+from backend.app.local.ingest_excel_inventory import ingestion_orchestration
+from backend.services.logger import logger
 
 
 def main():
