@@ -5,7 +5,7 @@ from backend.assets.config import TEST_SQLITE_DB_PATH, TEST_SQLITE_DB_PATH_WRONG
 from backend.lib.exceptions import DatabaseDoesNotExist
 from backend.services.logger import Logger
 
-logger: Logger = Logger()
+logger: Logger = Logger(logger_name="test_create-sqlite-db")
 
 
 def test_check_if_database_exists():

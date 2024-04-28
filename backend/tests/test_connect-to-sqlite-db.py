@@ -5,7 +5,7 @@ from backend.assets.config import TEST_SQLITE_DB_PATH, TEST_SQLITE_DB_PATH_WRONG
 from backend.lib.exceptions import DatabaseDoesNotExist
 from backend.services.logger import Logger
 
-logger: Logger = Logger()
+logger: Logger = Logger(logger_name="test_connect-to-sqlite-db")
 
 
 def test_connect_to_db():

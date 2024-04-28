@@ -8,12 +8,12 @@ from backend.assets.config import DATE_FMT, LOGGING_FILE_LEVEL, LOGGING_CONS_LEV
 
 
 class Logger:
-    def __init__(self) -> NoReturn:
+    def __init__(self, logger_name: str) -> NoReturn:
         # general setup
         date_dt: str = datetime.strftime(datetime.now(), DATE_FMT)
         # logging config
         ## logger
-        self.logger: logging.Logger = logging.getLogger("console_output")
+        self.logger: logging.Logger = logging.getLogger(logger_name)
         ## console logger
         console_log: logging.StreamHandler = logging.StreamHandler()
         ## file logger

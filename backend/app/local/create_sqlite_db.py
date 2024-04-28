@@ -5,7 +5,7 @@ from backend.assets.config import PROJ_PATH
 from backend.lib.exceptions import DatabaseDoesNotExist
 from backend.services.logger import Logger
 
-logger: Logger = Logger()
+logger: Logger = Logger(logger_name="create_sqlite_db")
 
 
 def check_db_existence(db_file: str, create_db: bool = False) -> bool:

@@ -3,7 +3,7 @@ from backend.assets.config import YAML_COLUMNS_FILENAME, INVENTORY_INPUT_COL_LIS
 from backend.services.logger import Logger
 from backend.utils.column_lists import read_colums_yaml
 
-logger: Logger = Logger()
+logger: Logger = Logger(logger_name="test_ingest-excel-inventory")
 
 
 def test_ingest_excel():

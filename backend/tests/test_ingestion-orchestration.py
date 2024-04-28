@@ -2,7 +2,7 @@ from pandas import DataFrame
 from backend.app.local.ingest_excel_inventory import ingestion_orchestration
 from backend.services.logger import Logger
 
-logger: Logger = Logger()
+logger: Logger = Logger(logger_name="test_ingestion-orchestration")
 
 
 def test_orchestration_returns_not_false():

@@ -1,12 +1,12 @@
 import pandas as pd
 
-from backend.assets.config import YAML_COLUMNS_FILENAME, PROJ_PATH
+from backend.assets.config import YAML_COLUMNS_FILENAME, INVENTORY_INPUT_COL_LIST, PROJ_PATH
 from backend.services.logger import Logger
 from backend.utils.column_lists import read_colums_yaml
 
 from typing import Union
 
-logger: Logger = Logger()
+logger: Logger = Logger(logger_name="ingest_excel_inventory")
 
 
 def read_excel_input_file(file_to_ingest: str) -> pd.DataFrame:
@@ -49,21 +49,20 @@ def check_columns_on_file(ingested_pdf: pd.DataFrame, column_list: list) -> bool
         bool: `True` o `False` dependiendo de los chequeos descritos
     """
     # imports
-    from assets.config import INVENTORY_INPUT_COL_LIST
     # setup
     requested_cols = column_list[INVENTORY_INPUT_COL_LIST]
     # exec
     ## check if number of columns is equal on ingestion and requisite
     cols_on_ingested_pdf = ingested_pdf.shape[1]
     cols_on_requested_list = len(requested_cols)
-    logger.logger.debug(cols_on_ingested_pdf)
-    logger.logger.debug(cols_on_requested_list)
+    logger.logger.debug(f"{cols_on_ingested_pdf = }")
+    logger.logger.debug(f"{cols_on_requested_list = }")
     check_len_columns = cols_on_requested_list == cols_on_ingested_pdf
     if not check_len_columns:
         return False
     ## check if all requested columns are in ingested pdf
-    logger.logger.debug(ingested_pdf.columns)
-    logger.logger.debug(requested_cols)
+    logger.logger.debug(f"{ingested_pdf.columns = }")
+    logger.logger.debug(f"{requested_cols = }")
     for column in requested_cols:
         if column not in ingested_pdf.columns:
             return False
