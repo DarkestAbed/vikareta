@@ -11,6 +11,7 @@ from backend.assets.config import PROJ_PATH, TEST_TABLE_DTYPES, DATE_DB_FMT
 from backend.lib.exceptions import DataInsertionError, UnknownError
 from backend.lib.sqlite_db import SQLiteDB
 from backend.services.logger import Logger
+from backend.utils.local_sqlite_location import return_sqlite_db_uri
 
 logger: Logger = Logger(logger_name="sink_into_db")
 
@@ -25,7 +26,8 @@ def check_local_dest_table(db_file: str, table_name: str) -> bool:
     if len(results) < 1:
         logger.logger.critical("Development database is empty")
         logger.logger.info("Creating tables at run time...")
-        db: SQLiteDB = SQLiteDB(db_file=f"sqlite:///{path_join(PROJ_PATH, "assets", db_file)}")
+        db_uri: str = return_sqlite_db_uri(db_file=db_file)
+        db: SQLiteDB = SQLiteDB(db_file=db_uri)
         results: list[Any] = db.execute_query(q=SQL_LIST_TABLES_CMD)
     else:
         logger.logger.info("Database already populated. Proceeding...")
@@ -40,7 +42,8 @@ def check_local_dest_table(db_file: str, table_name: str) -> bool:
 
 
 def data_load_into_db(input_data: pd.DataFrame, db_file: str, table_name: str) -> None:
-    db: SQLiteDB = SQLiteDB(db_file=f"sqlite:///{path_join(PROJ_PATH, "assets", db_file)}")
+    db_uri: str = return_sqlite_db_uri(db_file=db_file)
+    db: SQLiteDB = SQLiteDB(db_file=db_uri)
     column_mapper: dict = {
         "nombre": "name",
         "cantidad": "quantity",
@@ -55,7 +58,8 @@ def data_load_into_db(input_data: pd.DataFrame, db_file: str, table_name: str) -
             name=table_name,
             con=db.engine,
             if_exists="replace",
-            index=False,
+            index=True,
+            index_label="id",
             dtype=TEST_TABLE_DTYPES,
             chunksize=100,
             method="multi",
